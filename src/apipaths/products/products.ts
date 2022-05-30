@@ -1,17 +1,25 @@
 import express from "express";
-import { addProduct, getProducts } from "../../handlers/ProductHandler";
+import { addProduct, deleteProduct, getProducts, getProductsOfTheLastHour, updateProduct } from "../../handlers/ProductHandler";
 const productRouter = express.Router();
 
-
-productRouter.get("/", async (req, res) => {
-  const products = await getProducts();
-  res.send(products);
+productRouter.get("/all", async (req, res) => {
+  res.send(await getProducts());
 });
 
-productRouter.post("/", async (req, res) => {    
-    // const result = addProduct();
-    // res.send(result);
-    res.send("OK")
+productRouter.get("/", async (req, res) => {
+  res.send(await getProductsOfTheLastHour());
+});
+
+productRouter.post("/", async (req, res) => {
+  res.send(await addProduct(req.body));
+});
+
+productRouter.put("/", async (req, res) => {
+  res.send(await updateProduct(req.body));
+});
+
+productRouter.delete("/", async (req, res) => {
+  res.send(await deleteProduct(req.body));
 });
 
 export default productRouter;

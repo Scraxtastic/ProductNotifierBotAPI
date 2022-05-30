@@ -91,7 +91,7 @@ export default function (sequelize: Sequelize): typeof Products {
         allowNull: false,
       },
     },
-    { sequelize, modelName: "Products", tableName: "product", createdAt: "createdat", updatedAt: "updatedat", schema: "ProductNotifier"}
+    { sequelize, modelName: "Products", tableName: "product", createdAt: "createdat", updatedAt: "updatedat", schema: "ProductNotifier" }
   );
   return products;
 }
