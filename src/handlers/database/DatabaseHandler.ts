@@ -28,6 +28,8 @@ const sequelize = new Sequelize({
 
 import ProductCreator from "./models/Product";
 export const Products = ProductCreator(sequelize);
+import ApikeyCreator from "./models/Apikey";
+export const Apikeys = ApikeyCreator(sequelize);
 
 const testConnection = async () => {
   try {

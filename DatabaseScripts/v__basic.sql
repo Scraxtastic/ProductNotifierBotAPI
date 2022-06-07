@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Product(
     availability TEXT,
     type TEXT,
     productName TEXT,
-    additionalFields json,
+    additionalFields JSON,
     createdAt TIMESTAMP WITH TIME ZONE,
     updatedAt TIMESTAMP WITH TIME ZONE
 );
@@ -32,4 +32,12 @@ CREATE INDEX product_type_idx ON Product(
 
 CREATE INDEX product_productname_idx ON Product(
     productName ASC
+);
+
+CREATE TABLE IF NOT EXISTS Apikeys(
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    givenTo: TEXT,
+    permissions: JSON,
+    createdAt TIMESTAMP WITH TIME ZONE,
+    updatedAt TIMESTAMP WITH TIME ZONE
 );

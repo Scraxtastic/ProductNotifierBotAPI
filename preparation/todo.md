@@ -1,0 +1,6 @@
+- [ ] Create and fill .env file
+- [ ] build connection to a database
+- [ ] add products to a database
+- [ ] get products from a database
+- [ ] integrate product service in the api
+- [ ] require apikey or similar for api use

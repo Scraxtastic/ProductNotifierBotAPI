@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { Products } from "./database/DatabaseHandler";
-import { ProductAttributes, ProductCreationAttributes } from "./database/models/Product";
+import Product, { ProductAttributes, ProductCreationAttributes } from "./database/models/Product";
 
 const getProducts = async (): Promise<any> => {
   const products = await Products.findAll();
@@ -23,6 +23,7 @@ const getProductsOfTheLastHour = async (): Promise<any> => {
 };
 
 const addProduct = async (product: ProductCreationAttributes): Promise<any> => {
+  if (!isProductValid(product)) return "given product is not valid";
   const newProduct = await Products.create(product);
   return newProduct.get();
 };
@@ -33,9 +34,10 @@ const addProduct = async (product: ProductCreationAttributes): Promise<any> => {
  * @returns product the updated product
  */
 const updateProduct = async (product: ProductAttributes): Promise<any> => {
+  if (!isProductValid(product)) return "given product is not valid";
   const productToUpdate = await Products.findByPk(product.id);
-  if(!productToUpdate) return "product not found";
-  const fieldsToUpdate: (keyof ProductCreationAttributes)[] = [
+  if (!productToUpdate) return "product not found";
+  const fieldsToUpdate: (keyof ProductAttributes)[] = [
     "title",
     "description",
     "price",
@@ -48,13 +50,37 @@ const updateProduct = async (product: ProductAttributes): Promise<any> => {
     "type",
     "productname",
     "additionalfields",
+    "updatedat",
   ];
+  product.updatedat = new Date();
   productToUpdate.update(product as ProductCreationAttributes, { fields: fieldsToUpdate });
   return productToUpdate.get();
 };
 
 const deleteProduct = async (product: ProductAttributes): Promise<any> => {
   return "feature coming soon...";
+};
+
+/**
+ * checks if all variables that are neccessary are not null.
+ * @param product the product to check if it is valid
+ * @returns true if the product is valid, false otherwise
+ */
+const isProductValid = (product: ProductCreationAttributes) => {
+  if (
+    !product.title ||
+    !product.price ||
+    !product.link ||
+    !product.websitename ||
+    !product.available ||
+    !product.availability ||
+    !product.type ||
+    !product.productname
+  )
+    return false;
+
+  if (!Number.parseInt(product.price+"")) return false;
+  return true;
 };
 
 export { getProducts, addProduct, updateProduct, deleteProduct, getProductsOfTheLastHour };
