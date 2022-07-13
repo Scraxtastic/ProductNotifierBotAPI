@@ -1,5 +1,13 @@
 import express from "express";
-import { addProduct, deleteProduct, getProducts, getProductsOfTheLastHour, updateProduct } from "../../handlers/ProductHandler";
+import {
+  addProduct,
+  addProducts,
+  deleteProduct,
+  getProduct,
+  getProducts,
+  getProductsOfTheLastHour,
+  updateProduct,
+} from "../../handlers/productHandler";
 const productRouter = express.Router();
 
 productRouter.get("/all", async (req, res) => {
@@ -7,11 +15,17 @@ productRouter.get("/all", async (req, res) => {
 });
 
 productRouter.get("/", async (req, res) => {
-  res.send(await getProductsOfTheLastHour());
+  const title = req.headers.title+"";
+  const websitename = req.headers.websitename+"";
+  res.send(await getProduct(title, websitename));
 });
 
 productRouter.post("/", async (req, res) => {
   res.send(await addProduct(req.body));
+});
+
+productRouter.post("/bulk", async (req, res) => {
+  res.send(await addProducts(req.body));
 });
 
 productRouter.put("/", async (req, res) => {

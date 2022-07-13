@@ -6,20 +6,15 @@ import { INameValueMapping } from "../../../models/INameValueMapping";
 export class ProductCreationAttributes {
   title: string;
   description: string;
-  price: number;
   link: string;
   thumbnail: string;
   image: string;
   websitename: string;
-  available: boolean;
-  availability: string;
-  type: string;
-  productname: string;
-  additionalfields: INameValueMapping[];
+  additionalfields?: INameValueMapping[];
 }
 
 export class ProductAttributes extends ProductCreationAttributes {
-  id: number;
+  id: string;
   createdat: Date;
   updatedat: Date;
 }
@@ -31,8 +26,7 @@ export default function (sequelize: Sequelize): typeof Products {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true,
-        autoIncrement: true,
+        primaryKey: true
       },
       title: {
         type: DataTypes.TEXT,
@@ -41,10 +35,6 @@ export default function (sequelize: Sequelize): typeof Products {
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },
-      price: {
-        type: DataTypes.NUMBER,
-        allowNull: false,
       },
       link: {
         type: DataTypes.TEXT,
@@ -62,22 +52,6 @@ export default function (sequelize: Sequelize): typeof Products {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      available: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
-      availability: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      type: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      productname: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
       additionalfields: {
         type: DataTypes.JSON,
         allowNull: true,
@@ -92,6 +66,6 @@ export default function (sequelize: Sequelize): typeof Products {
       },
     },
     { sequelize, modelName: "Products", tableName: "product", createdAt: "createdat", updatedAt: "updatedat", schema: "ProductNotifier" }
-  );
+  );  
   return products;
 }

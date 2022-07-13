@@ -21,8 +21,7 @@ export default function (sequelize: Sequelize): typeof Apikeys {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true,
-        autoIncrement: true,
+        primaryKey: true
       },
       givenTo: {
         type: DataTypes.TEXT,

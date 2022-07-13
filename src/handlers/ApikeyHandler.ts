@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
-import { Apikeys } from "./database/DatabaseHandler";
-import Apikey, { ApikeyAttributes, ApikeyCreationAttributes } from "./database/models/Apikey";
+import { Apikeys } from "./database/databaseHandler";
+import Apikey, { ApikeyAttributes, ApikeyCreationAttributes } from "./database/models/apikey";
 
 const getApikeys = async (): Promise<any> => {
   const apikeys = await Apikeys.findAll();
@@ -8,7 +8,6 @@ const getApikeys = async (): Promise<any> => {
 };
 
 const addApikey = async (apikey: ApikeyCreationAttributes): Promise<any> => {
-  if (!isApikeyValid(apikey)) return "given product is not valid";
   const newApikey = await Apikeys.create(apikey);
   return newApikey.get();
 };
@@ -19,7 +18,6 @@ const addApikey = async (apikey: ApikeyCreationAttributes): Promise<any> => {
  * @returns product the updated product
  */
 const updateApikey = async (apikey: ApikeyAttributes): Promise<any> => {
-  if (!isApikeyValid(apikey)) return "given product is not valid";
   const productToUpdate = await Apikeys.findByPk(apikey.id);
   if (!productToUpdate) return "product not found";
   const fieldsToUpdate: (keyof ApikeyCreationAttributes)[] = ["givenTo", "permissions"];
@@ -29,16 +27,6 @@ const updateApikey = async (apikey: ApikeyAttributes): Promise<any> => {
 
 const deleteApikey = async (product: ApikeyAttributes): Promise<any> => {
   return "feature coming soon...";
-};
-
-/**
- * checks if all variables that are neccessary are not null.
- * @param apikey the product to check if it is valid
- * @returns true if the product is valid, false otherwise
- */
-const isApikeyValid = (apikey: ApikeyCreationAttributes) => {
-  if (!apikey.givenTo || !apikey.permissions) return false;
-  return true;
 };
 
 export { getApikeys, addApikey, updateApikey, deleteApikey };

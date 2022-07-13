@@ -1,5 +1,5 @@
-import { Sequelize } from "sequelize";
-import 'dotenv/config';
+import { DataTypes, Sequelize } from "sequelize";
+import "dotenv/config";
 
 // Option 1: Passing a connection URI
 // const sequelize = new Sequelize('sqlite::memory:') // Example for sqlite
@@ -23,13 +23,40 @@ const sequelize = new Sequelize({
   password: process.env.DBPassword,
   host: process.env.DBHost,
   port: Number.parseInt(process.env.DBPort),
-  dialect: "postgres"
+  dialect: "postgres",
 });
 
-import ProductCreator from "./models/Product";
-export const Products = ProductCreator(sequelize);
-import ApikeyCreator from "./models/Apikey";
+import ApikeyCreator from "./models/apikey";
 export const Apikeys = ApikeyCreator(sequelize);
+import CompanyNameCreator from "./models/companyName";
+export const CompanyNames = CompanyNameCreator(sequelize);
+import ProductCreator from "./models/product";
+export const Products = ProductCreator(sequelize);
+import ProductNameCreator from "./models/productName";
+export const ProductNames = ProductNameCreator(sequelize);
+import ProductSnapshotCreator from "./models/productSnapshot";
+export const ProductSnapshots = ProductSnapshotCreator(sequelize);
+import ProductTypeCreator from "./models/productType";
+export const ProductTypes = ProductTypeCreator(sequelize);
+
+//Foreign Keys
+ProductTypes.hasOne(ProductNames);
+// ProductNames.belongsTo(ProductTypes);
+Products.belongsTo(ProductNames);
+// ProductNames.hasMany(Products, { foreignKey: "productNameID" });
+Products.belongsTo(CompanyNames);
+// CompanyNames.hasMany(Products, { foreignKey: "companyNameID" });
+Products.belongsTo(ProductTypes);
+// ProductTypes.hasMany(Products, { foreignKey: "productTypeID" });
+Products.hasMany(ProductSnapshots);
+// Products.hasMany(ProductSnapshots, { foreignKey: "productID" });
+
+//TODO: Ask Besnik for help
+const sync = async () => {
+  let sync = await sequelize.sync({ force: true });
+  console.log("Synced", sync);
+};
+sync();
 
 const testConnection = async () => {
   try {

@@ -1,6 +1,38 @@
 import { Op } from "sequelize";
-import { Products } from "./database/DatabaseHandler";
-import Product, { ProductAttributes, ProductCreationAttributes } from "./database/models/Product";
+import { ProductSnapshots, Products } from "./database/databaseHandler";
+import Product, { ProductAttributes, ProductCreationAttributes } from "./database/models/product";
+import { ProductSnapshotAttributes } from "./database/models/productSnapshot";
+
+const getProductID = async (title: string, websitename: string): Promise<any> => {
+  return (await getProduct(title, websitename)).id;
+};
+
+const getProduct = async (title: string, websitename: string): Promise<any> => {
+  const productToCreate: ProductCreationAttributes = {
+    title,
+    description: "",
+    link: "",
+    thumbnail: "",
+    image: "",
+    websitename,
+  };
+  const product = await Products.findAll({
+    where: {
+      [Op.and]: [{ title: title }, { websitename: websitename }],
+    },
+  });
+
+  console.log(product);
+  return true;
+  // const [product, created] = await Products.findCreateFind({
+  //   where: {
+  //     [Op.and]: [{ title: title }, { websitename: websitename }],
+  //   },
+  // });
+  // console.log("product", product, "created", created);
+
+  // return { data: product.get(), created };
+};
 
 const getProducts = async (): Promise<any> => {
   const products = await Products.findAll();
@@ -11,7 +43,7 @@ const getProducts = async (): Promise<any> => {
  * @returns all products that were created in the last hour.
  */
 const getProductsOfTheLastHour = async (): Promise<any> => {
-  const products = await Products.findAll({
+  const products = await ProductSnapshots.findAll({
     where: {
       createdat: {
         [Op.gt]: new Date(Date.now() - 3600000),
@@ -23,9 +55,14 @@ const getProductsOfTheLastHour = async (): Promise<any> => {
 };
 
 const addProduct = async (product: ProductCreationAttributes): Promise<any> => {
-  if (!isProductValid(product)) return "given product is not valid";
   const newProduct = await Products.create(product);
   return newProduct.get();
+};
+
+const addProducts = async (products: ProductCreationAttributes[]): Promise<any> => {
+  const newProducts = await Products.bulkCreate(products);
+  const data = newProducts.map((product) => product.get());
+  return { data };
 };
 
 /**
@@ -34,26 +71,22 @@ const addProduct = async (product: ProductCreationAttributes): Promise<any> => {
  * @returns product the updated product
  */
 const updateProduct = async (product: ProductAttributes): Promise<any> => {
-  if (!isProductValid(product)) return "given product is not valid";
   const productToUpdate = await Products.findByPk(product.id);
   if (!productToUpdate) return "product not found";
   const fieldsToUpdate: (keyof ProductAttributes)[] = [
     "title",
     "description",
-    "price",
     "link",
     "thumbnail",
     "image",
     "websitename",
-    "available",
-    "availability",
-    "type",
-    "productname",
     "additionalfields",
     "updatedat",
   ];
   product.updatedat = new Date();
-  productToUpdate.update(product as ProductCreationAttributes, { fields: fieldsToUpdate });
+  productToUpdate.update(product as ProductCreationAttributes, {
+    fields: fieldsToUpdate,
+  });
   return productToUpdate.get();
 };
 
@@ -61,26 +94,4 @@ const deleteProduct = async (product: ProductAttributes): Promise<any> => {
   return "feature coming soon...";
 };
 
-/**
- * checks if all variables that are neccessary are not null.
- * @param product the product to check if it is valid
- * @returns true if the product is valid, false otherwise
- */
-const isProductValid = (product: ProductCreationAttributes) => {
-  if (
-    !product.title ||
-    !product.price ||
-    !product.link ||
-    !product.websitename ||
-    !product.available ||
-    !product.availability ||
-    !product.type ||
-    !product.productname
-  )
-    return false;
-
-  if (!Number.parseInt(product.price+"")) return false;
-  return true;
-};
-
-export { getProducts, addProduct, updateProduct, deleteProduct, getProductsOfTheLastHour };
+export { getProduct, getProducts, addProduct, addProducts, updateProduct, deleteProduct, getProductsOfTheLastHour };

@@ -1,0 +1,5 @@
+[
+    "/products:get",
+    "/products:post",
+    "/products:*"
+]
