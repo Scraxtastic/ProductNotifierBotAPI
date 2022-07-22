@@ -40,16 +40,20 @@ import ProductTypeCreator from "./models/productType";
 export const ProductTypes = ProductTypeCreator(sequelize);
 
 //Foreign Keys
-ProductTypes.hasOne(ProductNames);
-// ProductNames.belongsTo(ProductTypes);
-Products.belongsTo(ProductNames);
-// ProductNames.hasMany(Products, { foreignKey: "productNameID" });
-Products.belongsTo(CompanyNames);
-// CompanyNames.hasMany(Products, { foreignKey: "companyNameID" });
-Products.belongsTo(ProductTypes);
-// ProductTypes.hasMany(Products, { foreignKey: "productTypeID" });
-Products.hasMany(ProductSnapshots);
-// Products.hasMany(ProductSnapshots, { foreignKey: "productID" });
+ProductTypes.hasMany(ProductNames, { foreignKey: "productTypeID" });
+ProductNames.belongsTo(ProductTypes, { foreignKey: "productTypeID" });
+
+ProductNames.hasMany(Products, { foreignKey: "productNameID" });
+Products.belongsTo(ProductNames, { foreignKey: "productNameID" });
+
+CompanyNames.hasMany(Products, { foreignKey: "companyNameID" });
+Products.belongsTo(CompanyNames, { foreignKey: "companyNameID" });
+
+ProductTypes.hasMany(Products, { foreignKey: "productTypeID" });
+Products.belongsTo(ProductTypes, { foreignKey: "productTypeID" });
+
+Products.hasMany(ProductSnapshots, { foreignKey: "productID" });
+ProductSnapshots.belongsTo(Products, { foreignKey: "productID" });
 
 //TODO: Ask Besnik for help
 const sync = async () => {

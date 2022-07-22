@@ -9,7 +9,6 @@ import morgan from "morgan";
 import { testConnection } from "./handlers/database/databaseHandler";
 import helmet from "helmet";
 import productSnapshotRouter from "./apipaths/productSnapshots/productSnapshotRouter";
-import testRouter from "./apipaths/test/testRouter";
 
 const port = process.env.APIPort; // default port to listen
 const app = express();
@@ -54,7 +53,6 @@ app.get("/", (req, res) => {
 
 app.use("/products", productRouter);
 app.use("/productsnapshots", productSnapshotRouter);
-app.use("/test", testRouter);
 
 // start the Express server
 app.listen(port, () => {

@@ -4,7 +4,7 @@ import Apikey, { ApikeyAttributes, ApikeyCreationAttributes } from "./database/m
 
 const getApikeys = async (): Promise<any> => {
   const apikeys = await Apikeys.findAll();
-  return apikeys.map((product) => product.get());
+  return apikeys.map((apikey) => apikey.get());
 };
 
 const addApikey = async (apikey: ApikeyCreationAttributes): Promise<any> => {
@@ -25,7 +25,7 @@ const updateApikey = async (apikey: ApikeyAttributes): Promise<any> => {
   return productToUpdate.get();
 };
 
-const deleteApikey = async (product: ApikeyAttributes): Promise<any> => {
+const deleteApikey = async (apikey: ApikeyAttributes): Promise<any> => {
   return "feature coming soon...";
 };
 

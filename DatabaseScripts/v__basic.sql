@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- TABLES 
 CREATE TABLE IF NOT EXISTS ProductType(
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    type TEXT NOT NULL,
+    "type" TEXT NOT NULL,
     createdAt TIMESTAMP WITH TIME ZONE NOT NULL,
     updatedAt TIMESTAMP WITH TIME ZONE NOT NULL
 );
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS ProductName(
 
 CREATE TABLE IF NOT EXISTS CompanyName(
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    companyName TEXT NOT NULL,
+    "companyName" TEXT NOT NULL,
     createdAt TIMESTAMP WITH TIME ZONE NOT NULL,
     updatedAt TIMESTAMP WITH TIME ZONE NOT NULL
 );

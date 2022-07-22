@@ -11,6 +11,9 @@ export class ProductCreationAttributes {
   image: string;
   websitename: string;
   additionalfields?: INameValueMapping[];
+  productNameID?: string;
+  companyNameID?: string;
+  productTypeID?: string;
 }
 
 export class ProductAttributes extends ProductCreationAttributes {
@@ -26,7 +29,8 @@ export default function (sequelize: Sequelize): typeof Products {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
       title: {
         type: DataTypes.TEXT,
@@ -38,7 +42,7 @@ export default function (sequelize: Sequelize): typeof Products {
       },
       link: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       thumbnail: {
         type: DataTypes.TEXT,
@@ -56,6 +60,18 @@ export default function (sequelize: Sequelize): typeof Products {
         type: DataTypes.JSON,
         allowNull: true,
       },
+      productNameID: {
+        type: DataTypes.UUID,
+        allowNull: true,
+      },
+      companyNameID: {
+        type: DataTypes.UUID,
+        allowNull: true,
+      },
+      productTypeID: {
+        type: DataTypes.UUID,
+        allowNull: true,
+      },
       createdat: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -66,6 +82,6 @@ export default function (sequelize: Sequelize): typeof Products {
       },
     },
     { sequelize, modelName: "Products", tableName: "product", createdAt: "createdat", updatedAt: "updatedat", schema: "ProductNotifier" }
-  );  
+  );
   return products;
 }

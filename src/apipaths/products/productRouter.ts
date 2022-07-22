@@ -8,20 +8,28 @@ import {
   getProductsOfTheLastHour,
   updateProduct,
 } from "../../handlers/productHandler";
+import { addProductSnapshot, getProductSnapshotsOfTheLastHour } from "../../handlers/productSnapshotHandler";
+
 const productRouter = express.Router();
 
 productRouter.get("/all", async (req, res) => {
   res.send(await getProducts());
 });
 
+productRouter.get("/hour", async (req, res) => {
+  res.send(await getProductSnapshotsOfTheLastHour());
+});
+
 productRouter.get("/", async (req, res) => {
-  const title = req.headers.title+"";
-  const websitename = req.headers.websitename+"";
-  res.send(await getProduct(title, websitename));
+  const title = req.headers.title + "";
+  const websitename = req.headers.websitename + "";
+  // res.send(await getProduct(websitename));
 });
 
 productRouter.post("/", async (req, res) => {
-  res.send(await addProduct(req.body));
+  console.log(req);
+  
+  res.send(await addProductSnapshot(req.body));
 });
 
 productRouter.post("/bulk", async (req, res) => {

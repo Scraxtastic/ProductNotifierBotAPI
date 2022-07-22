@@ -1,37 +1,24 @@
 import { Op } from "sequelize";
-import { ProductSnapshots, Products } from "./database/databaseHandler";
+import { getCompanyNameEntryByName } from "./companyNameHandler";
+import { ProductSnapshots, Products, CompanyNames } from "./database/databaseHandler";
 import Product, { ProductAttributes, ProductCreationAttributes } from "./database/models/product";
 import { ProductSnapshotAttributes } from "./database/models/productSnapshot";
+import { getProductNameEntryByName } from "./productNameHandler";
+import { getProductTypeEntryByName } from "./productTypeHandler";
 
-const getProductID = async (title: string, websitename: string): Promise<any> => {
-  return (await getProduct(title, websitename)).id;
+const getProductID = async (productToFind: ProductCreationAttributes): Promise<any> => {
+  return (await getProduct(productToFind)).id;
 };
 
-const getProduct = async (title: string, websitename: string): Promise<any> => {
-  const productToCreate: ProductCreationAttributes = {
-    title,
-    description: "",
-    link: "",
-    thumbnail: "",
-    image: "",
-    websitename,
-  };
-  const product = await Products.findAll({
+const getProduct = async (productToFind: ProductCreationAttributes): Promise<any> => {
+  const { title, description, link, thumbnail, image, websitename, additionalfields } = productToFind;
+  const [product, created] = await Products.findOrCreate({
     where: {
-      [Op.and]: [{ title: title }, { websitename: websitename }],
+      [Op.and]: [{ title }, { websitename }, { description }, { link }, { thumbnail }, { image }, { additionalfields }],
     },
+    defaults: {title, description, link, thumbnail, image, websitename, additionalfields},
   });
-
-  console.log(product);
-  return true;
-  // const [product, created] = await Products.findCreateFind({
-  //   where: {
-  //     [Op.and]: [{ title: title }, { websitename: websitename }],
-  //   },
-  // });
-  // console.log("product", product, "created", created);
-
-  // return { data: product.get(), created };
+  return { data: product.get(), created };
 };
 
 const getProducts = async (): Promise<any> => {

@@ -1,7 +1,10 @@
 import express from "express";
+import { getProductSnapshotsOfTheLastHour } from "../../handlers/productSnapshotHandler";
+
 const productSnapshotRouter = express.Router();
 
 productSnapshotRouter.get("/hour", async (req, res) => {
+    res.send(await getProductSnapshotsOfTheLastHour());
 });
 
 productSnapshotRouter.get("/", async (req, res) => {

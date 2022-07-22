@@ -1,8 +1,10 @@
 import { Op } from "sequelize";
-import { ProductSnapshots } from "./database/databaseHandler";
+import { ICompleteProduct } from "../models/ICompleteProduct";
+import { Products, ProductSnapshots } from "./database/databaseHandler";
 import { ProductSnapshotCreationAttributes, ProductSnapshotAttributes } from "./database/models/productSnapshot";
+import { getProduct } from "./productHandler";
 
-const getProducts = async (): Promise<any> => {
+const getProductSnapshots = async (): Promise<any> => {
   const products = await ProductSnapshots.findAll();
   return products.map((product) => product.get());
 };
@@ -10,7 +12,7 @@ const getProducts = async (): Promise<any> => {
 /**
  * @returns all products that were created in the last hour.
  */
-const getProductsOfTheLastHour = async (): Promise<any> => {
+const getProductSnapshotsOfTheLastHour = async (): Promise<any> => {
   const products = await ProductSnapshots.findAll({
     where: {
       createdat: {
@@ -18,16 +20,23 @@ const getProductsOfTheLastHour = async (): Promise<any> => {
       },
       available: true,
     },
+    include: [Products],
   });
   return products.map((product) => product.get());
 };
 
-const addProduct = async (product: ProductSnapshotCreationAttributes): Promise<any> => {
-  const newProduct = await ProductSnapshots.create(product);
+const addProductSnapshot = async (product: ICompleteProduct): Promise<any> => {
+  console.log("addProductSnapshot", product);
+  const { price, availability, available } = product;
+
+  const foundProduct = await getProduct(product);
+  console.log("foundProduct", foundProduct);
+  
+  const newProduct = await ProductSnapshots.create({ price, availability, available, productID: foundProduct.data.id });
   return newProduct.get();
 };
 
-const addProducts = async (products: ProductSnapshotCreationAttributes[]): Promise<any> => {
+const addProductSnapshots = async (products: ProductSnapshotCreationAttributes[]): Promise<any> => {
   const newProducts = await ProductSnapshots.bulkCreate(products);
   const data = newProducts.map((product) => product.get());
   return { data };
@@ -38,7 +47,7 @@ const addProducts = async (products: ProductSnapshotCreationAttributes[]): Promi
  * @param the product to update with all new values
  * @returns product the updated product
  */
-const updateProduct = async (product: ProductSnapshotAttributes): Promise<any> => {
+const updateProductSnapshot = async (product: ProductSnapshotAttributes): Promise<any> => {
   const productToUpdate = await ProductSnapshots.findByPk(product.id);
   if (!productToUpdate) return "product not found";
   const fieldsToUpdate: (keyof ProductSnapshotAttributes)[] = ["price", "available", "availability", "updatedat"];
@@ -49,8 +58,15 @@ const updateProduct = async (product: ProductSnapshotAttributes): Promise<any> =
   return productToUpdate.get();
 };
 
-const deleteProduct = async (product: ProductSnapshotAttributes): Promise<any> => {
+const deleteProductSnapshot = async (product: ProductSnapshotAttributes): Promise<any> => {
   return "feature coming soon...";
 };
 
-export { getProducts, addProduct, addProducts, updateProduct, deleteProduct, getProductsOfTheLastHour };
+export {
+  getProductSnapshots,
+  addProductSnapshot,
+  addProductSnapshots,
+  updateProductSnapshot,
+  deleteProductSnapshot,
+  getProductSnapshotsOfTheLastHour,
+};

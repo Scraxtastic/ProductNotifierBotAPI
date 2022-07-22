@@ -5,6 +5,7 @@ import { INameValueMapping } from "../../../models/INameValueMapping";
 
 export class ProductNameCreationAttributes {
   productname: string;
+  productTypeID: string;
 }
 
 export class ProductNameAttributes extends ProductNameCreationAttributes {
@@ -26,6 +27,10 @@ export default function (sequelize: Sequelize): typeof ProductNames {
       productname: {
         type: DataTypes.TEXT,
         allowNull: false,
+      },
+      productTypeID: {
+        type: DataTypes.UUID,
+        allowNull: true,
       },
       createdat: {
         type: DataTypes.DATE,

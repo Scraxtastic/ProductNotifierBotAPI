@@ -6,6 +6,7 @@ export class ProductSnapshotCreationAttributes {
   price: number;
   available: boolean;
   availability: string;
+  productID: string;
 }
 
 export class ProductSnapshotAttributes extends ProductSnapshotCreationAttributes {
@@ -21,7 +22,8 @@ export default function (sequelize: Sequelize): typeof ProductSnapshots {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
       price: {
         type: DataTypes.INTEGER,
@@ -33,6 +35,10 @@ export default function (sequelize: Sequelize): typeof ProductSnapshots {
       },
       availability: {
         type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      productID: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
       createdat: {

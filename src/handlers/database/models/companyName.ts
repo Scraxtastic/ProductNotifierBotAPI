@@ -20,7 +20,8 @@ export default function (sequelize: Sequelize): typeof CompanyNames {
     {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
       companyName: {
         type: DataTypes.TEXT,
